@@ -17,72 +17,99 @@ namespace Assignment2_ScrabbleScorer_csharp
             {8, "J, X" },
             {10, "Q, Z" }
         };
-
+        public static Dictionary<char, int> newPointStructure = new Dictionary<char, int>();
 
 
 
         //Code your Transform method here
-        static Dictionary<string,int> Transform()
+        static void Transform()
         {
-            Dictionary<char, int> newPointStructure = new Dictionary<char, int>();
-            /*string[] newLetters = new string[oldPointStructure.Keys.Count];
-            //collect strings into array
-            for(int i = 0; i < oldPointStructure.Count; i++)
-            {
-                newLetters[i] = oldPointStructure.Values.ElementAt(i); //stores string into array for separation
 
-            }*/
-            foreach(int point in oldPointStructure.Keys)
+            foreach (KeyValuePair<int, string> pairs in oldPointStructure)
             {
-                foreach(string letters in oldPointStructure.Values)
-                {
-                    char[] charArray = letters.ToCharArray(); //sends all letters including commas and spaces to array
+                    char[] charArray = pairs.Value.ToCharArray(); //sends all letters including commas and spaces to array
                     for(int i = 0; i < charArray.Length; i++)
                     {
                         if(!(charArray[i].Equals(" ") || charArray[i].Equals(",")))
                         {
-                             
-                            newPointStructure.Add(charArray[i], point);
+                            if(!(newPointStructure.Keys.Contains(charArray[i])))
+                            {
+                                newPointStructure.Add(charArray[i], pairs.Key);
+                            }
+                           
                         }
                         
                     }
-                }
             }
-                
-            
-            
 
-
-            
         }
         
-
-
-
-
         //Code your Scoring Option methods here
 
         //SimpleScorer-----
-        public static void SimpleScorer()
+        public static void SimpleScore(string word)
         {
-
+            int count = 0;
+            foreach(char letter in word)
+            {
+                count++;
+            }
+            Console.WriteLine($"Your word '{word}' is worth {count} points.");
         }
-
-
         //BonusVowels-----
-
-
-
-
+        public static void BonusVowels(string word)
+        {
+            int count = 0;
+            int vowelCount = 0;
+            string vowels = "AEIOU";
+            foreach (char letter in word) //cycles through each character
+            {
+                foreach(char vowelLetter in vowels) //if cycles through all vowels
+                {
+                    if(letter.Equals(vowelLetter)) //compares to see if there is a vowel. 
+                    {
+                        vowelCount++; //is vowel
+                    }
+                }
+                count++;
+            }
+            count = (vowelCount * 3) + (count - vowelCount);
+            Console.WriteLine($"Your word '{word}' is worth {count} points.");
+        }
         //ScrabbleScorer-----
-
-
-
-
+        public static void ScrabbleScore(string word)
+        {
+            int count = 0;
+            foreach (char letter in word) //cycles each character in word
+            {
+                foreach(KeyValuePair<char, int> letterPairs in newPointStructure) //cycles through entire point system
+                {
+                    if(letterPairs.Key.Equals(letter)) //if there is a match, give appropriate amt of points
+                    {
+                        count += letterPairs.Value; //based on Key/Value
+                    }
+                }
+            }
+            Console.WriteLine($"Your word '{word}' is worth {count} points.");
+        }
 
         //Code your ScoringAlgorithms method here
 
-
+        static void ScoringAlgorithms(int output, string word = "taxi")
+        {
+            if(output == 1)
+            {
+                ScrabbleScore(word);
+            }
+            else if (output == 2)
+            {
+                SimpleScore(word);
+            }
+            else
+            {
+                BonusVowels(word);
+            }
+        }
 
 
 
@@ -131,7 +158,23 @@ namespace Assignment2_ScrabbleScorer_csharp
 
         //Code your RunProgram method here
 
-
+        static void RunProgram()
+        {
+            string end = "0";
+            bool exit = true;
+            int choice = InitialPrompt();
+            while(exit)
+            {
+                Console.WriteLine("Please enter a word to score. Type '0' to end.");
+                string wordInput = Console.ReadLine().ToUpper();
+                if(wordInput.Equals(end))
+                {
+                    break;
+                }
+                ScoringAlgorithms(choice, wordInput);
+            }
+            Console.WriteLine("Thanks for playing!");
+        }
 
 
 
@@ -139,8 +182,9 @@ namespace Assignment2_ScrabbleScorer_csharp
         static void Main(string[] args)
         {
             //Call your RunProgram method here
-            //InitialPrompt();
             Transform();
+            RunProgram();
+            Console.ReadLine();
 
 
 
