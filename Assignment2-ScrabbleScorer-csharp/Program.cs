@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Assignment2_ScrabbleScorer_csharp
 {
@@ -21,8 +22,40 @@ namespace Assignment2_ScrabbleScorer_csharp
 
 
         //Code your Transform method here
+        static Dictionary<string,int> Transform()
+        {
+            Dictionary<char, int> newPointStructure = new Dictionary<char, int>();
+            /*string[] newLetters = new string[oldPointStructure.Keys.Count];
+            //collect strings into array
+            for(int i = 0; i < oldPointStructure.Count; i++)
+            {
+                newLetters[i] = oldPointStructure.Values.ElementAt(i); //stores string into array for separation
+
+            }*/
+            foreach(int point in oldPointStructure.Keys)
+            {
+                foreach(string letters in oldPointStructure.Values)
+                {
+                    char[] charArray = letters.ToCharArray(); //sends all letters including commas and spaces to array
+                    for(int i = 0; i < charArray.Length; i++)
+                    {
+                        if(!(charArray[i].Equals(" ") || charArray[i].Equals(",")))
+                        {
+                             
+                            newPointStructure.Add(charArray[i], point);
+                        }
+                        
+                    }
+                }
+            }
+                
+            
+            
 
 
+            
+        }
+        
 
 
 
@@ -78,7 +111,7 @@ namespace Assignment2_ScrabbleScorer_csharp
                         choiceString = Console.ReadLine();
                         if (int.TryParse(choiceString, out intChoice))
                         {
-                            
+                            //does nothing
                         }
                     }
                     exit = false; //exits while loop
@@ -90,9 +123,7 @@ namespace Assignment2_ScrabbleScorer_csharp
                     choiceString = Console.ReadLine();
                 }
             }
-
             return output;
-
         }
 
 
@@ -108,8 +139,8 @@ namespace Assignment2_ScrabbleScorer_csharp
         static void Main(string[] args)
         {
             //Call your RunProgram method here
-            InitialPrompt();
-
+            //InitialPrompt();
+            Transform();
 
 
 
